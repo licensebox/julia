@@ -14,7 +14,18 @@ const library_lock=ReentrantLock()
 function sym(name)
     lock(library_lock) do
         if library[]==C_NULL
-            library[]=Libdl.dlopen(get(ENV,"LICENSEBOX_LIBRARY","liblicensebox"))
+            Sys.islinux() || throw(LicenseboxError("unsupported_platform","this native profile currently requires glibc Linux"))
+            path=get(ENV,"LICENSEBOX_LIBRARY","liblicensebox.so")
+            # glibc LM_ID_NEWLM=-1, RTLD_NOW=2, RTLD_LOCAL=0. A separate
+            # namespace prevents Julia's bundled curl/OpenSSL from replacing
+            # the native core's system dependencies. Allocations are freed by
+            # the same native library, including JSON result buffers.
+            handle=ccall(:dlmopen,Ptr{Cvoid},(Clong,Cstring,Cint),-1,path,2)
+            if handle==C_NULL
+                detail=native_text(ccall(:dlerror,Cstring,()))
+                throw(LicenseboxError("native_library_error","cannot load native core in an isolated glibc namespace: "*detail))
+            end
+            library[]=handle
         end
         Libdl.dlsym(library[],name)
     end
