@@ -1,4 +1,4 @@
-# Check HTTPS using the core's own isolated curl dependency. No licensing API,
+# Check HTTPS using the core's Julia-compatible curl dependency. No licensing API,
 # account data, activation or credentials are involved in this public GET.
 using Licensebox, Test
 function discard(_::Ptr{Cvoid},size::Csize_t,count::Csize_t,context::Ptr{Cvoid})::Csize_t
@@ -17,4 +17,4 @@ try
 finally
     ccall(Licensebox.sym(:curl_easy_cleanup),Cvoid,(Ptr{Cvoid},),handle)
 end
-println("PASS: verified HTTPS using the isolated native dependency")
+println("PASS: verified HTTPS using the Julia-compatible native dependency")

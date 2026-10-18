@@ -74,11 +74,12 @@ digest is sent. Cloned/spoofed IDs and modified host software remain limitations
 this is not hardware attestation. Payments and billing are handled separately
 by product administrators.
 
-This Julia binding requires glibc Linux. It loads the native core in a separate
-glibc namespace so Julia's bundled curl/OpenSSL cannot replace the system
-dependencies used by the core. Native allocations are freed by the same library.
-Alpine/musl, other operating systems and browser/WASM are not supported by this
-profile yet. Test/validation status is recorded in GitHub Actions; do not infer
+Build the native core with `scripts/install-native.sh` for the active Julia
+runtime: it links against Julia's curl and the declared OpenSSL_jll. A generic
+system-linked core may conflict with Julia's bundled libraries. Rebuild after
+changing Julia runtimes. Callback exceptions and allocation ownership use the
+normal Julia/native boundary. Other operating systems and browser/WASM are not
+supported by this profile yet. Test/validation status is recorded in GitHub Actions; do not infer
 platform support merely because a language runtime exists there.
 
 See [shared protocol and tests](https://github.com/licensebox/protocol),
