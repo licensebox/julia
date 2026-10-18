@@ -1,6 +1,6 @@
 module Licensebox
 using JSON3, Libdl, OpenSSL_jll, NetworkOptions
-export Client, LicenseboxError, require, lease, status, sign_in, logout,
+export Client, LicenseboxError, require, lease, heartbeat, status, sign_in, logout,
        modules, requests, request_access, access_link, record, derive_binding,
        native_binding, verify_lease
 
@@ -148,6 +148,10 @@ function call(client::Client,operation,args=Dict())
     end
 end
 lease(c::Client)=call(c,"lease")
+"""heartbeat(client, module): explicitly renew without sign-in; returns lease/online.
+The caller owns scheduling on the Julia runtime thread. No timers are started.
+"""
+heartbeat(c::Client,module_name::AbstractString)=call(c,"heartbeat",Dict("module"=>argument(module_name)))
 require(c::Client,module_name::AbstractString)=call(c,"require",Dict("module"=>argument(module_name)))
 status(c::Client)=call(c,"status")
 sign_in(c::Client;timeout=0.0)=call(c,"sign_in",Dict("timeout"=>timeout))

@@ -11,3 +11,14 @@ using Licensebox,Test
     @test_throws ArgumentError status(c)
     close(c) # idempotent disposal
 end
+
+@testset "Explicit heartbeat ownership and no activation" begin
+    mktempdir() do directory
+        c=Client("demo",Dict("test-key"=>"A6EHv_POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg");directory=directory,server="http://127.0.0.1:1")
+        try
+            try heartbeat(c,"core"); @test false
+            catch error; @test error isa LicenseboxError && error.code=="not_signed_in"; end
+        finally close(c);end
+        @test_throws ArgumentError heartbeat(c,"core")
+    end
+end
