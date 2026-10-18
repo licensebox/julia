@@ -37,7 +37,7 @@ finally
 end
 ```
 
-Install with `Pkg.add(url="https://github.com/licensebox/julia", rev="v0.1.0")`.
+Install with `Pkg.add(url="https://github.com/licensebox/julia", rev="v0.2.0")`.
 Registry registration is separate. Catch `LicenseboxError` and inspect `.code`.
 Results are owned JSON values. Explicit `close` is recommended; a finalizer also
 releases abandoned handles. Calls/close use a lock. The package preserves Julia

@@ -1,7 +1,7 @@
 name = "Licensebox"
 uuid = "5f78cf76-a31b-4e1d-8c40-94121d70ebc1"
 authors = ["Vijai Kumar"]
-version = "0.1.0"
+version = "0.2.0"
 [deps]
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
