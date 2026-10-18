@@ -7,6 +7,6 @@ permissions:
   contents: read
 jobs:
   conformance:
-    uses: licensebox/protocol/.github/workflows/sdk.yml@bd3977b9117657ca73434561b35f46473e9dd8dc
+    uses: licensebox/protocol/.github/workflows/sdk.yml@f0425e2277e5a179df5fbb0544c2c066b751dfe5
     with:
       language: julia

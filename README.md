@@ -4,7 +4,7 @@ Application licensing backed by the shared C core: native machine identity,
 email sign-in, signed offline leases, silent renewal, module access, approval
 requests and usage reporting. Linux is the initial runtime target.
 
-Requirements: Julia 1.10+ and JSON3 1.14; Licensebox C >=0.2.0, OpenSSL 3, libcurl 7.85+ and
+Requirements: Julia 1.12+ and JSON3 1.14; Licensebox C >=0.2.0, OpenSSL 3, libcurl 7.85+ and
 json-c. The native dependency is pinned in `native-version.txt` and updated by
 the tested contract-sync workflow. No native code is downloaded at runtime.
 
@@ -92,3 +92,6 @@ MIT. Copyright © 2026 [Vijai Kumar](https://meshing.engineer).
 The default trust bundle comes from Julia’s `NetworkOptions.ca_roots_path()`.
 An explicit `ca_bundle` may select another PEM trust bundle; peer and hostname
 verification remain mandatory.
+
+Julia 1.12 or newer is required. Earlier runtimes bundle a different TLS backend
+and are not supported by this native dependency profile.
