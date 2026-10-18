@@ -24,6 +24,6 @@ r=JSON3.read(read(stdin,String),Dict{String,Any})
 answer=try Dict("ok"=>true,"value"=>run(r))
 catch e
     e isa LicenseboxError || rethrow()
-    Dict("ok"=>false,"error"=>e.code)
+    Dict("ok"=>false,"error"=>e.code,"detail"=>e.message)
 end
 println(JSON3.write(answer))
