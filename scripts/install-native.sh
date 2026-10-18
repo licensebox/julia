@@ -12,7 +12,7 @@ git -C "$source" diff --quiet
 julia --startup-file=no --project="$root" -e 'using Pkg; Pkg.instantiate()'
 mapfile -t libraries < <(julia --startup-file=no --project="$root" "$root/scripts/native-libraries.jl")
 cmake -S "$source" -B "$root/.native-build-$version" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_LIBDIR=lib \
-  "-DCURL_LIBRARY=${libraries[0]}" "-DCURL_LIBRARY_RELEASE=${libraries[0]}" "-DCURL_LIBRARY_DEBUG=${libraries[0]}" "-DOPENSSL_CRYPTO_LIBRARY=${libraries[1]}"
+  "-Dpkgcfg_lib_PC_CURL_curl=${libraries[0]}" "-DCURL_LIBRARY=${libraries[0]}" "-DCURL_LIBRARY_RELEASE=${libraries[0]}" "-DCURL_LIBRARY_DEBUG=${libraries[0]}" "-DOPENSSL_CRYPTO_LIBRARY=${libraries[1]}"
 cmake --build "$root/.native-build-$version" -j 2
 cmake --install "$root/.native-build-$version" --prefix "$prefix"
 printf 'Installed native core in %s/lib\n' "$prefix"

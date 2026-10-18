@@ -4,7 +4,7 @@ function run(r)
     op=="derive" && return derive_binding(product,r["source"],r["raw_id"])
     op=="native" && return native_binding(product)
     op=="verify" && return verify_lease(r["token"],product,r["keys"],r["now"])
-    c=Client(product,r["keys"];server=r["server"],directory=r["directory"],version="conformance",clock=()->r["now"],machine_binding=()->get(r,"binding",""),on_sign_in=(_,_)->nothing)
+    c=Client(product,r["keys"];server=r["server"],directory=r["directory"],version="conformance",clock=()->r["now"],machine_binding=()->get(r,"binding",""),on_sign_in=(_,_)->nothing,ca_bundle=get(r,"ca_bundle",Licensebox.NetworkOptions.ca_roots_path()))
     try
         op=="lease" && return lease(c)
         op=="require" && return require(c,get(r,"module","core"))

@@ -88,3 +88,7 @@ and [integration docs](https://licensebox.dev/docs). Administration remains in
 the [Go CLI](https://github.com/licensebox/go) and web console.
 
 MIT. Copyright © 2026 [Vijai Kumar](https://meshing.engineer).
+
+The default trust bundle comes from Julia’s `NetworkOptions.ca_roots_path()`.
+An explicit `ca_bundle` may select another PEM trust bundle; peer and hostname
+verification remain mandatory.

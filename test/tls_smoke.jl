@@ -8,6 +8,7 @@ handle=ccall(Licensebox.sym(:curl_easy_init),Ptr{Cvoid},())
 @test handle!=C_NULL
 try
     @test ccall(Licensebox.sym(:curl_easy_setopt),Cint,(Ptr{Cvoid},Cint,Cstring),handle,10002,"https://licensebox.dev/llms.txt")==0
+    @test ccall(Licensebox.sym(:curl_easy_setopt),Cint,(Ptr{Cvoid},Cint,Cstring),handle,10065,Licensebox.NetworkOptions.ca_roots_path())==0
     @test ccall(Licensebox.sym(:curl_easy_setopt),Cint,(Ptr{Cvoid},Cint,Clong),handle,13,30)==0
     @test ccall(Licensebox.sym(:curl_easy_setopt),Cint,(Ptr{Cvoid},Cint,Clong),handle,64,1)==0
     @test ccall(Licensebox.sym(:curl_easy_setopt),Cint,(Ptr{Cvoid},Cint,Clong),handle,81,2)==0

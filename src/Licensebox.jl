@@ -1,5 +1,5 @@
 module Licensebox
-using JSON3, Libdl, OpenSSL_jll
+using JSON3, Libdl, OpenSSL_jll, NetworkOptions
 export Client, LicenseboxError, require, lease, status, sign_in, logout,
        modules, requests, request_access, access_link, record, derive_binding,
        native_binding, verify_lease
@@ -97,10 +97,12 @@ clock and machine_binding are trusted platform/testing seams, never user input.
 Keep one client per process. Close it explicitly with close(client).
 """
 function Client(product::AbstractString,keys::AbstractDict;version="",directory=nothing,server=nothing,
-                on_sign_in=nothing,clock=nothing,machine_binding=nothing,cancelled=nothing)
+                on_sign_in=nothing,clock=nothing,machine_binding=nothing,cancelled=nothing,
+                ca_bundle=NetworkOptions.ca_roots_path())
     options=Dict{String,Any}("product"=>argument(product),"keys"=>keys,"version"=>argument(version))
     directory!==nothing && (options["directory"]=argument(directory))
     server!==nothing && (options["server"]=argument(server))
+    ca_bundle!==nothing && (options["ca_bundle"]=argument(ca_bundle))
     state=CallbackState(on_sign_in,clock,machine_binding,cancelled,nothing)
     callbacks=NativeCallbacks(pointer_from_objref(state),
        on_sign_in===nothing ? C_NULL : @cfunction(signin_callback,Cvoid,(Ptr{Cvoid},Cstring,Cstring)),
