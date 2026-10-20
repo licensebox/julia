@@ -4,7 +4,7 @@ Application licensing backed by the shared C core: native machine identity,
 email sign-in, signed offline leases, silent renewal, module access, approval
 requests and usage reporting. Linux is the initial runtime target.
 
-Requirements: Julia 1.12+ and JSON3 1.14; Licensebox C >=0.2.0, OpenSSL 3, libcurl 7.85+ and
+Requirements: Julia 1.12+ and JSON3 1.14; Licensebox C >=0.5.0, OpenSSL 3.5+, libcurl 7.85+ and
 json-c. The native dependency is pinned in `native-version.txt` and updated by
 the tested contract-sync workflow. No native code is downloaded at runtime.
 
@@ -37,7 +37,7 @@ finally
 end
 ```
 
-Install with `Pkg.add(url="https://github.com/licensebox/julia", rev="v0.2.0")`.
+Install with `Pkg.add(url="https://github.com/licensebox/julia", rev="v0.3.0")`.
 Registry registration is separate. Catch `LicenseboxError` and inspect `.code`.
 Results are owned JSON values. Explicit `close` is recommended; a finalizer also
 releases abandoned handles. Calls/close use a lock. The package preserves Julia
