@@ -2,7 +2,7 @@ module Licensebox
 using JSON3, Libdl, OpenSSL_jll, NetworkOptions
 export Client, LicenseboxError, require, lease, heartbeat, status, sign_in, logout,
        modules, requests, request_access, access_link, record, derive_binding,
-       native_binding, verify_lease
+       native_binding, verify_lease, enrol, checkout, checkin
 
 struct LicenseboxError <: Exception
     code::String
@@ -98,11 +98,12 @@ Keep one client per process. Close it explicitly with close(client).
 """
 function Client(product::AbstractString,keys::AbstractDict;version="",directory=nothing,server=nothing,
                 on_sign_in=nothing,clock=nothing,machine_binding=nothing,cancelled=nothing,
-                ca_bundle=NetworkOptions.ca_roots_path())
+                ca_bundle=NetworkOptions.ca_roots_path(),enrol_token=nothing)
     options=Dict{String,Any}("product"=>argument(product),"keys"=>keys,"version"=>argument(version))
     directory!==nothing && (options["directory"]=argument(directory))
     server!==nothing && (options["server"]=argument(server))
     ca_bundle!==nothing && (options["ca_bundle"]=argument(ca_bundle))
+    enrol_token!==nothing && (options["enrol_token"]=argument(enrol_token))
     state=CallbackState(on_sign_in,clock,machine_binding,cancelled,nothing)
     callbacks=NativeCallbacks(pointer_from_objref(state),
        on_sign_in===nothing ? C_NULL : @cfunction(signin_callback,Cvoid,(Ptr{Cvoid},Cstring,Cstring)),
@@ -160,6 +161,12 @@ modules(c::Client)=call(c,"modules")
 requests(c::Client)=call(c,"requests")
 request_access(c::Client,names::AbstractVector,note::AbstractString="")=call(c,"request",Dict("modules"=>names,"note"=>argument(note)))
 access_link(c::Client)=call(c,"access-link")
+"Enrols this machine as a service account with a one-time token (or set enrol_token / LICENSEBOX_ENROL_TOKEN)."
+enrol(c::Client,token::AbstractString)=call(c,"enrol",Dict("token"=>argument(token)))
+"Checks a floating copy of the module out; require does so by itself."
+checkout(c::Client,module_name::AbstractString)=call(c,"checkout",Dict("module"=>argument(module_name)))
+"Returns floating copies of the modules, or every copy with none named."
+checkin(c::Client,names::AbstractString...)=(call(c,"checkin",Dict("modules"=>[argument(n) for n in names]));nothing)
 record(c::Client,command::AbstractString,success::Bool,elapsed::Real)=call(c,"record",Dict("command"=>argument(command),"success"=>success,"elapsed"=>elapsed))
 function derive_binding(product::AbstractString,source::AbstractString,raw::AbstractString)
     p=argument(product);s=argument(source);r=String(rstrip(raw,'\0'))
